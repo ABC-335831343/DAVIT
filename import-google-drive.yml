@@ -1,0 +1,32 @@
+name: Import Google Drive Folders
+
+on:
+  workflow_dispatch:  # מאפשר להפעיל ידנית
+
+jobs:
+  import-folders:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v3
+
+      - name: Install gdown
+        run: pip install gdown
+
+      - name: Download folders from Google Drive
+        run: |
+          mkdir imported_drive
+
+          gdown --folder https://drive.google.com/drive/folders/1clvbcVrqFw350nqxI1RddT9KDFVxhHHT -O imported_drive/folder1
+          gdown --folder https://drive.google.com/drive/folders/1wv0uPjFf1JbFQHs9zVE06_zhvz3ft8da -O imported_drive/folder2
+          gdown --folder https://drive.google.com/drive/folders/1d_hSZq-wS_QNIQNVTg9CwDbXlxnisOsL -O imported_drive/folder3
+          gdown --folder https://drive.google.com/drive/folders/1JWskrXCR74QFGnvJQfRboPI95lrYBRyf -O imported_drive/folder4
+
+      - name: Commit and Push changes
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git add imported_drive
+          git commit -m "Imported folders from Google Drive"
+          git push
